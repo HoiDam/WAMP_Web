@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 26, 2021 at 04:47 AM
+-- Generation Time: Apr 26, 2021 at 08:40 AM
 -- Server version: 5.7.14
 -- PHP Version: 5.6.25
 
@@ -45,12 +45,20 @@ CREATE TABLE `question` (
 
 CREATE TABLE `room` (
   `room_id` int(4) NOT NULL,
-  `inv_code` varchar(20) NOT NULL,
+  `inv_code` varchar(13) NOT NULL,
   `max_player` int(2) NOT NULL,
   `status` varchar(10) NOT NULL,
   `current_q` int(2) NOT NULL,
-  `list_of_player` varchar(200) NOT NULL
+  `list_of_player` varchar(200) NOT NULL,
+  `now_no` int(2) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `room`
+--
+
+INSERT INTO `room` (`room_id`, `inv_code`, `max_player`, `status`, `current_q`, `list_of_player`, `now_no`) VALUES
+(9714, '60867a444a388', 20, 'created', 0, '2529', 0);
 
 -- --------------------------------------------------------
 
