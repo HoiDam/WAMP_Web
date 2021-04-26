@@ -1,33 +1,33 @@
 <?php
 
+function msgPack($res, $reason = "")
+{
+  return array("status" => $res, "msg" => $reason);
+}
+
 function create_room($user_id, $max_player, $question)
 {
   $inv = rand();
   $inv_code = md5($inv);
   $room_id = rand(1000, 9999);
-  if (checkuser($user_id) != false) {
-    if (checkroomid($room_id) != false) {
-      $current_question = 0;
-      $sql = "INSERT INTO quiz.room(room_id, inv_code, max_player, status, current_q, list_of_player) = ($room_id, $inv_code, $max_player, 'created', $current_question, '?' )";
-      insert_q($question, $room_id);
-    } else {
-      $room_id = rand(1000, 9999);
-      $sql = "INSERT INTO quiz.room(room_id, inv_code, max_player, status, current_q, list_of_player) = ($room_id, $inv_code, $max_player, 'created', $current_question, '?' )";
-      insert_q($question, $room_id);
-    }
-  }
-
   try {
-    $db = new db();
-    $db = $db->connect();
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
-    $db = null;
+    if (checkuser($user_id) != false) {
+      if (checkroomid($room_id) != false) {
+        $sql = "INSERT INTO room (room_id,inv_code,max_player,status,current_q,list_of_player) VALUES ($room_id, '$inv_code', $max_player, 'created', 0, $user_id)";
+        $db = new db();
+        $db = $db->connect();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $db = null;
+      }
+    }
   } catch (PDOException $e) {
     return msgPack("failed", $e);
   }
+  $ray = array("code: $inv_code", "room ID: $room_id");
+  return msgPack("sucess", $ray);
 
-  return msgPack($inv_code, $room_id);
+  insert_q($question, $room_id);
 }
 
 function insert_q($question, $room_id)
@@ -36,6 +36,12 @@ function insert_q($question, $room_id)
   $stored = shuffle($stored);
   $question_id = rand(1000, 9999);
   foreach ($stored as $value) {
+    $q = $stored;
+    $c1 = $stored;
+    $c2 = $stored;
+    $c3 = $stored;
+    $c4 = $stored;
+    $correct_q = $stored;
     $sql = "INSERT INTO quiz.question(question_id,question,c1,c2,c3,c4,correct_q,room_id) VALUES ($question_id, $q, $c1, $c2, $c3, $c4, $correct_q, $room_id)";
   }
   try {
@@ -72,18 +78,11 @@ function checkroomid($room_id)
 function checkuser($userid)
 {
   $sql = "SELECT * FROM user WHERE user_id = $userid";
-
-  try {
-    $db = new db();
-    $db = $db->connect();
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
-    $db = null;
-  } catch (PDOException $e) {
-    return msgPack("failed", 'The user id is invalid');
-  }
-
-  return msgPack("success");
+  $db = new db();
+  $db = $db->connect();
+  $stmt = $db->prepare($sql);
+  $stmt->execute();
+  $db = null;
 };
 
 function start_room($user_id, $room_id)
@@ -180,7 +179,7 @@ function get_room_status($room_id)
     return msgPack("failed", $e);
   }
 
-  return msgPack("success", $status);
+  return msgPack("success", $stmt);
 }
 
 
@@ -199,4 +198,8 @@ function end_room($user_id, $room_id)
   }
 
   return msgPack("success", $user_id);
+}
+
+function checkhost($user_id)
+{
 }
