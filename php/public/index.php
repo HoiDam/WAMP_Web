@@ -44,6 +44,8 @@ $app->post('/question/change', function (Request $req, Response $res, $arg) {
   return json_encode(change_question($user_id, $room_id, $question_id));
 });
 
+
+
 // --- User Routes -------------------------------------------------------
 $app->post('/user/create', function (Request $req, Response $res, $arg) {
 
@@ -55,6 +57,22 @@ $app->post('/user/create', function (Request $req, Response $res, $arg) {
   }
   return json_encode(create_user($username));
 });
+
+$app->post('/user/obtain', function (Request $req, Response $res, $arg) {
+
+  try {
+    $input = $req->getParsedBody();
+    $room_id = $input['room_id'];
+  } catch (Exception $e) {
+    return json_encode(msgPack("failed", "parameters missing"));
+  }
+  return json_encode(get_player($room_id));
+});
+
+
+
+
+
 
 // --- Room Routes -------------------------------------------------------
 $app->post('/room/create', function (Request $req, Response $res, $arg) {
@@ -116,5 +134,7 @@ $app->post('/room/end', function (Request $req, Response $res, $arg) {
   }
   return json_encode(end_room($user_id, $room_id));
 });
+
 // ---------------------------------------------------------------
+
 $app->run();
