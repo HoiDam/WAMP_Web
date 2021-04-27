@@ -19,16 +19,27 @@ use \Psr\Http\Message\ResponseInterface as Response;
 $app = new \Slim\App;
 
 // --- Question Routes -------------------------------------------------------
+$app->post('/question/insert', function (Request $req, Response $res, $arg) {
+
+  try {
+    $input = $req->getParsedBody();
+  } catch (Exception $e) {
+    return json_encode(msgPack("failed", "parameters missing"));
+  }
+  return json_encode(insert_q($input));
+});
+
+
 $app->post('/question/get', function (Request $req, Response $res, $arg) {
 
   try {
     $input = $req->getParsedBody();
     $room_id = $input['room_id'];
-    $question = $input['question'];
+    $question_id = $input['question_id'];
   } catch (Exception $e) {
     return json_encode(msgPack("failed", "parameters missing"));
   }
-  return json_encode(get_question($room_id, $question));
+  return json_encode(get_question($room_id, $question_id));
 });
 
 $app->post('/question/change', function (Request $req, Response $res, $arg) {
@@ -43,6 +54,7 @@ $app->post('/question/change', function (Request $req, Response $res, $arg) {
   }
   return json_encode(change_question($user_id, $room_id, $question_id));
 });
+
 
 
 
