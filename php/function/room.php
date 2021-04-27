@@ -16,6 +16,7 @@ function create_room($user_id, $max_player)
     $stmt = $db->prepare($sql);
     $stmt->execute();
     $db = null;
+    return msgPack("success", $inv_code);
   } catch (PDOException $e) {
     return msgPack("failed", $e);
   }
