@@ -5,7 +5,7 @@ function msgPack($res, $reason = "")
   return array("status" => $res, "msg" => $reason);
 }
 
-function create_room($user_id, $max_player, $question)
+function create_room($user_id, $max_player)
 {
   $inv_code = uniqid();
   $room_id = rand(1000, 9999);
@@ -22,7 +22,7 @@ function create_room($user_id, $max_player, $question)
 }
 
 
-function start_room($user_id, $room_id)
+function start_room($room_id)
 {
   $sql = "UPDATE room SET status = 'started' WHERE room_id = $room_id";
 
