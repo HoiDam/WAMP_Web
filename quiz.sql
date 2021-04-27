@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2021 at 03:29 PM
+-- Generation Time: Apr 27, 2021 at 03:55 PM
 -- Server version: 5.7.14
 -- PHP Version: 5.6.25
 
@@ -43,6 +43,8 @@ CREATE TABLE `question` (
 --
 
 INSERT INTO `question` (`question_id`, `question`, `c1`, `c2`, `c3`, `c4`, `correct_ans`, `room_id`, `created`) VALUES
+(999, 'question', 'this is c4', 'this is c1', 'this is c3', 'this is c2', '1', '3395', '2021-04-27'),
+(998, 'question', 'this is c3', 'this is c1', 'this is c4', 'this is c2', '1', '3395', '2021-04-27'),
 (98, 'question', 'this is c2', 'this is c3', 'this is c4', 'correct', 'correct', '3395', NULL),
 (996, 'question', 'this is c4', 'this is c3', 'this is c2', 'correct', 'correct', '3395', NULL),
 (309, 'question', 'correct', 'this is c4', 'this is c3', 'this is c2', 'correct', '3395', NULL),
@@ -58,11 +60,19 @@ INSERT INTO `question` (`question_id`, `question`, `c1`, `c2`, `c3`, `c4`, `corr
 (188, 'question', 'this is c2', 'this is c1', 'this is c3', 'this is c4', 'this is c1', '3395', NULL),
 (596, 'question', 'this is c4', 'this is c2', 'this is c3', 'this is c1', 'this is c1', '3395', NULL),
 (635, 'question', 'this is c2', 'this is c1', 'this is c3', 'this is c4', 'this is c1', '3395', NULL),
+(997, 'question', 'this is c1', 'this is c3', 'this is c4', 'this is c2', '0', '3395', '2021-04-27'),
 (408, 'question', 'this is c1', 'this is c2', 'this is c4', 'this is c3', '0', '3395', '2021-04-27'),
 (329, 'question', 'this is c4', 'this is c2', 'this is c3', 'this is c1', '3', '3395', '2021-04-27'),
 (645, 'question', 'this is c3', 'this is c4', 'this is c2', 'this is c1', '3', '3395', '2021-04-27'),
 (415, 'question', 'this is c3', 'this is c1', 'this is c4', 'this is c2', '1', '3395', '2021-04-27'),
-(48, 'question', 'this is c3', 'this is c2', 'this is c1', 'this is c4', '2', '3395', '2021-04-27');
+(48, 'question', 'this is c3', 'this is c2', 'this is c1', 'this is c4', '2', '3395', '2021-04-27'),
+(1000, 'question', 'this is c2', 'this is c3', 'this is c1', 'this is c4', '2', '3395', '2021-04-27'),
+(1001, 'question', 'this is c4', 'this is c2', 'this is c1', 'this is c3', '2', '3395', '2021-04-27'),
+(1002, 'question', 'this is c3', 'this is c4', 'this is c1', 'this is c2', '2', '3395', '2021-04-27'),
+(1003, 'question', 'this is c3', 'this is c2', 'this is c4', 'this is c1', '3', '3395', '2021-04-27'),
+(1004, 'question', 'this is c1', 'this is c2', 'this is c4', 'this is c3', '0', '3395', '2021-04-27'),
+(1005, 'question', 'this is c1', 'this is c2', 'this is c3', 'this is c4', '0', '3395', '2021-04-27'),
+(1006, 'question', 'this is c3', 'this is c4', 'this is c2', 'this is c1', '3', '3395', '2021-04-27');
 
 -- --------------------------------------------------------
 
@@ -127,7 +137,7 @@ ALTER TABLE `question`
 -- AUTO_INCREMENT for table `question`
 --
 ALTER TABLE `question`
-  MODIFY `question_id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=997;
+  MODIFY `question_id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1007;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
