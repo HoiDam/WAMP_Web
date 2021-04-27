@@ -93,23 +93,21 @@ $app->post('/room/create', function (Request $req, Response $res, $arg) {
     $input = $req->getParsedBody();
     $user_id = $input['username'];
     $max_player = $input['max_player'];
-    $question = $input['question'];
   } catch (Exception $e) {
     return json_encode(msgPack("failed", "parameters missing"));
   }
-  return json_encode(create_room($user_id, $max_player, $question));
+  return json_encode(create_room($user_id, $max_player));
 });
 
 $app->post('/room/start', function (Request $req, Response $res, $arg) {
 
   try {
     $input = $req->getParsedBody();
-    $user_id = $input['user_id'];
     $room_id = $input['room_id'];
   } catch (Exception $e) {
     return json_encode(msgPack("failed", "parameters missing"));
   }
-  return json_encode(start_room($user_id, $room_id));
+  return json_encode(start_room($room_id));
 });
 
 $app->post('/room/join', function (Request $req, Response $res, $arg) {
