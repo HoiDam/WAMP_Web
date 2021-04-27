@@ -1,4 +1,5 @@
 
-Things to-do:
+Reminder:
 
-1. Correct Question Shuffling
+1. Question.php not tested yet
+2. See if any minor function is needed
