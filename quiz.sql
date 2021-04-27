@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 26, 2021 at 08:40 AM
+-- Generation Time: Apr 27, 2021 at 10:47 AM
 -- Server version: 5.7.14
 -- PHP Version: 5.6.25
 
@@ -33,9 +33,23 @@ CREATE TABLE `question` (
   `c2` varchar(200) NOT NULL,
   `c3` varchar(200) NOT NULL,
   `c4` varchar(200) NOT NULL,
-  `correct_q` varchar(2) NOT NULL,
-  `room_id` int(2) NOT NULL
+  `correct_ans` varchar(2) NOT NULL,
+  `room_id` varchar(4) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `question`
+--
+
+INSERT INTO `question` (`question_id`, `question`, `c1`, `c2`, `c3`, `c4`, `correct_ans`, `room_id`) VALUES
+(256, '', '', '', '', '', '', ''),
+(760, '', '', '', '', '', '', ''),
+(917, '', '', '', '', '', '', ''),
+(738, '', '', '', '', '', '', ''),
+(561, '', '', '', '', '', '', ''),
+(677, '', '', '', '', '', '', ''),
+(690, '', '', '', '', '', '', ''),
+(771, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -44,21 +58,21 @@ CREATE TABLE `question` (
 --
 
 CREATE TABLE `room` (
-  `room_id` int(4) NOT NULL,
+  `room_id` varchar(4) NOT NULL,
   `inv_code` varchar(13) NOT NULL,
   `max_player` int(2) NOT NULL,
   `status` varchar(10) NOT NULL,
   `current_q` int(2) NOT NULL,
-  `list_of_player` varchar(200) NOT NULL,
-  `now_no` int(2) NOT NULL
+  `now_no` int(20) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `room`
 --
 
-INSERT INTO `room` (`room_id`, `inv_code`, `max_player`, `status`, `current_q`, `list_of_player`, `now_no`) VALUES
-(9714, '60867a444a388', 20, 'created', 0, '2529', 0);
+INSERT INTO `room` (`room_id`, `inv_code`, `max_player`, `status`, `current_q`, `now_no`) VALUES
+('9714', '60867a444a388', 20, 'created', 0, 2),
+('3395', '6086d23d8cdc0', 20, 'finished', 0, 3);
 
 -- --------------------------------------------------------
 
@@ -67,19 +81,20 @@ INSERT INTO `room` (`room_id`, `inv_code`, `max_player`, `status`, `current_q`, 
 --
 
 CREATE TABLE `user` (
-  `user_id` int(4) NOT NULL,
+  `user_id` varchar(4) NOT NULL,
   `name` varchar(20) NOT NULL,
-  `created_at` date NOT NULL
+  `created_at` date NOT NULL,
+  `room_id` varchar(4) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `name`, `created_at`) VALUES
-(2529, 'abc', '2021-04-26'),
-(4841, 'abc', '2021-04-26'),
-(4222, 'abc', '2021-04-26');
+INSERT INTO `user` (`user_id`, `name`, `created_at`, `room_id`) VALUES
+('2529', 'abc', '2021-04-26', '3395'),
+('4841', 'abc', '2021-04-26', '3395'),
+('4222', 'abc', '2021-04-26', '3395');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
