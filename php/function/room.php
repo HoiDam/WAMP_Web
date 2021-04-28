@@ -7,7 +7,7 @@ function msgPack($res, $reason = "")
 
 function create_room($user_id, $max_player)
 {
-  $inv_code = uniqid();
+  $inv_code = substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyz", 5)), 0, 5);
   $room_id = rand(1000, 9999);
   try {
     $sql = "INSERT INTO room (room_id,inv_code,max_player,status,current_q,list_of_player, now_no) VALUES ($room_id, '$inv_code', $max_player, 'created', 0, $user_id, 0)";
