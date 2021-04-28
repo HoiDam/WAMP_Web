@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2021 at 03:55 PM
+-- Generation Time: Apr 28, 2021 at 08:20 AM
 -- Server version: 5.7.14
 -- PHP Version: 5.6.25
 
@@ -128,6 +128,18 @@ INSERT INTO `user` (`user_id`, `name`, `created_at`, `room_id`) VALUES
 --
 ALTER TABLE `question`
   ADD PRIMARY KEY (`question_id`);
+
+--
+-- Indexes for table `room`
+--
+ALTER TABLE `room`
+  ADD PRIMARY KEY (`room_id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
