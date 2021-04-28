@@ -28,6 +28,7 @@ const useStyles = theme => ({
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
+      height : '100%'
     },
   });
 
@@ -64,6 +65,7 @@ class Select extends Component {
         e.preventDefault();
         let max_player = e.target[0].value
         let question_set = this.state.questions
+        console.log(question_set)
     }
 
 

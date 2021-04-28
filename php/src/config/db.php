@@ -7,8 +7,8 @@ class db
 {
 
   private $dbhost = 'localhost';
-  private $dbuser = 'root';
-  private $dbpass = '';
+  private $dbuser = 'api_admin';
+  private $dbpass = 'admin@6969';
   private $dbname = 'quiz';
 
   public function connect()

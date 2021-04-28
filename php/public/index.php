@@ -1,8 +1,7 @@
 <?php
-header("Access-Control-Allow-Origin：'*'");
+
 
 // -- include libarary--------
-require '../php-client/autoload.php'; // blockcypher framework 
 require '../vendor/autoload.php'; //slim framwork
 require '../src/config/db.php'; //db
 require '../function/question.php'; //common util functions
@@ -17,6 +16,18 @@ use \Psr\Http\Message\ResponseInterface as Response;
 // ------------------------------------------------------
 
 $app = new \Slim\App;
+
+
+$app->get('/', function (Request $req, Response $res, $arg) {
+
+ // try {
+//    $input = $req->getParsedBody();
+ // } catch (Exception $e) {
+    return json_encode(msgPack("failed", "parameters missing"));
+  //}
+ //return json_encode(insert_q($input));
+});
+
 
 // --- Question Routes -------------------------------------------------------
 $app->post('/question/insert', function (Request $req, Response $res, $arg) {
@@ -146,5 +157,11 @@ $app->post('/room/end', function (Request $req, Response $res, $arg) {
 });
 
 // ---------------------------------------------------------------
-
+$app->add(function ($req, $res, $next) {
+    $response = $next($req, $res);
+    return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST');
+});
 $app->run();

@@ -53,7 +53,7 @@ class Hosting extends Component {
     render(){
         const {classes} = this.props;
         return (
-        <Container component="main" maxWidth="xs" >
+        <Container maxWidth="sm" >
 
             <div className={classes.paper}>
                 <Box mb={8}>
@@ -61,10 +61,11 @@ class Hosting extends Component {
                     👁️‍🗨️ Quizoo 👁️‍🗨️ 
                     </Typography>
                 </Box>
+            </div>
                 {
                     (this.state.end==false)?
                 <div>
-                    <Box mb={6}>
+                    <Box mb={6} className={classes.paper}>
                         <Typography component="h1" variant="h4">
                         Current Question : {this.state.current_question}
                         </Typography>
@@ -72,7 +73,7 @@ class Hosting extends Component {
                     
                         
                     <Grid container direction="row" spacing="1" height="300">
-                        <Grid item xs={6} height="200px">
+                        <Grid item sm={6} height="200px">
                         {
                             
                             (this.state.current_question!=this.state.last_question)?
@@ -94,7 +95,7 @@ class Hosting extends Component {
                         
                         }
                         </Grid>
-                        <Grid item xs={6} height="200px">
+                        <Grid item sm={6} height="200px">
                             <Button
                                 fullWidth
                                 variant="contained"
@@ -130,7 +131,7 @@ class Hosting extends Component {
                     </Box>
                 </Grid>
                 }
-            </div>
+            
             <Box mt={20}>
             </Box>
             </Container>

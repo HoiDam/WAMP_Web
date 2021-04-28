@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import setCookie from '../utils/cookies.js'
 const useStyles = theme => ({
@@ -25,6 +27,27 @@ const useStyles = theme => ({
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
+      height:"100%",
+      minWidth:"100%"
+    },
+    typo:{
+        fontWeight: 600
+    },
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'center',
+    },
+    modalpaper: {
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        height:"200px"
+      },
+    bar: {
+    height: 10,
+    borderRadius: 5,
     },
   });
 
@@ -36,28 +59,41 @@ class Gaming extends Component {
             question:"Are Ya Gae?",
             correct_answer:1,
             choices:["1","2","3","4"],
-            end:false
-          }
-      }
+            end:false,
+            correctness:false,
+            modalOpen:false,
+            correct_count:0,
+            wrong_count:0,
+            answered:false,
+            current_question:1,
+            total_question:5
+        }
+    }
     handleChoose = (e,index)=>{
         let chosen = index+1
         console.log(chosen)
-
+        if (chosen==this.state.correct_answer){
+            this.setState({modalOpen:true,correctness:true,answered:true,correct_count:this.state.correct_count+1});
+        }else {
+            this.setState({modalOpen:true,correctness:false,answered:true,wrong_count:this.state.wrong_count+1});
+        }
     }
+    handleClose = () => {
+        this.setState({modalOpen:false});
+    };
 
     render(){
         const {classes} = this.props;
         return (
         <div>
-            <Container component="main" maxWidth="sm" >
+            <Container component="main" maxWidth="md" >
                 <div className={classes.paper}>
                 <Box mb={4}>
                     <Typography component="h1" variant="h3">
                     👁️‍🗨️ Quizoo 👁️‍🗨️ 
                     </Typography>
-                    
                 </Box>
-                
+                </div>
                 {
                         (this.state.end==false)?
                     <div>
@@ -70,24 +106,29 @@ class Gaming extends Component {
                                 </div>
                             :
                             <Grid>
-                                <Box mb={4}>
+                                <Box mb={4} className={classes.paper}>
                                     <Typography  variant="h4">
-                                    Question : {this.state.question}
+                                    {this.state.current_question}/{this.state.total_question}
                                     </Typography>
+                                    
+                                </Box>
+                                <Box mb={4} >
+                                    <LinearProgress className={classes.bar} variant="determinate" value={this.state.current_question/this.state.total_question*100}/>
                                 </Box>
                                 <Grid container direction="row" spacing="3">
                                     {
                                     this.state.choices.map((choice,index)=>{
                                         return(
-                                    <Grid item sm={6}>
+                                    <Grid item xs={6} >
                                         <Button
                                         fullWidth
                                         variant="outlined"
                                         value={index} 
                                         className={classes.submit}
+                                        disabled={this.state.answered}
                                         onClick={(e)=>{this.handleChoose(e,index)}}>
-                                        <Typography  variant="body1">
-                                            {choice}
+                                        <Typography  variant="body1" className={classes.typo} >
+                                            <div>{choice}</div>
                                         </Typography>
                                         </Button>
                                     </Grid>
@@ -104,8 +145,62 @@ class Gaming extends Component {
                         Scoreboard
                     </div>
                 }
-                </div>
+
+                
             </Container>
+            <Modal
+                className={classes.modal}
+                open={this.state.modalOpen}
+                onClose={this.handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                timeout: 500,
+                }}
+            >
+                <Fade in={this.state.modalOpen}>
+                    <Container component="main" maxWidth="xs" >
+                    <div className={classes.modalpaper}>
+                        <Grid container direction="column" spacing="3" justify="center" alignItems="center">
+                            <Grid item xs={12} >
+                                <Typography variant="h4">
+                                    {
+                                        (this.state.correctness==false)?
+                                        <div>WRONG</div>
+                                        :
+                                        <div>CORRECT</div>
+                                    }
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                            <Box mb={2}>
+                                <Typography variant="h2" >
+                                    {
+                                        (this.state.correctness==false)?
+                                        <div>❌</div>
+                                        :
+                                        <div>✔️</div>
+                                    }
+                                </Typography >
+                            </Box>
+                            </Grid>
+                            <Grid item xs={12}>
+                            <Box mb={2}>
+                                <Typography variant="body1" >
+                                    {
+                                        (this.state.correctness==false)?
+                                        <div>Correct answer :{this.state.choices[this.state.correct_answer]}</div>
+                                        :
+                                        <div></div>
+                                    }
+                                </Typography>
+                            </Box>
+                            </Grid>
+                        </Grid>
+                    </div>
+                </Container>
+                </Fade>
+            </Modal>
         </div>
         )
     }

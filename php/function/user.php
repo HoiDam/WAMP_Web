@@ -2,20 +2,30 @@
 
 function create_user($username)
 {
-  try {
-    $user_id = rand(1000, 9999);
-    $created_at = date('Y-m-d H:i:s');
-    $sql = "INSERT INTO user(user_id, name, created_at) VALUES ($user_id,'$username','$created_at')";
+	try {
+	$created_at = date('Y-m-d H:i:s');
+	$sql = "INSERT INTO user (name, created_at) VALUES ('$username','$created_at') ;";
 
-    $db = new db();
-    $db = $db->connect();
+	$db = new db();
+	$db = $db->connect();
     $stmt = $db->prepare($sql);
-    $stmt->execute();
-    $db = null;
+    $stmt->execute();	
+	$db = null;
+	
   } catch (PDOException $e) {
     return msgPack("failed", $e);
   }
-  return msgPack("success", $user_id);
+  try {
+	$sql2 = "SELECT user_id FROM user WHERE name='$username' order by user_id desc Limit 1 ;";
+	$db = new db();
+    $db = $db->connect();
+    $stmt2 = $db->query($sql2);
+    $fetched = $stmt2->fetch();
+    $db = null;
+	} catch (PDOException $e) {
+    return msgPack("failed", $e);
+  }
+  return msgPack("success", $fetched["user_id"]);
 }
 
 function get_player($room_id)

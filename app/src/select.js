@@ -35,10 +35,22 @@ class Select extends Component {
     constructor(props) {
         super(props);
         this.state={
-
+            inv_code:"",
+            emptyness:true
           }
       }
 
+    handleOnChange=(e)=>{
+      if (e.target.value.length==0){
+        this.setState({inv_code:e.target.value,emptyness:true})
+      }else{
+        this.setState({inv_code:e.target.value,emptyness:false})
+      }
+    }
+    handleOnJoin = (e) =>{
+      let inv_code = this.state.inv_code
+      console.log(inv_code)
+    }
     render(){
         const {classes} = this.props;
         return (
@@ -53,18 +65,17 @@ class Select extends Component {
             </Box>
             <TextField
                 variant="outlined"
-                required
                 fullWidth
                 id="inv_code"
                 label="Invitation Code"
                 name="inv_code"
                 autoComplete="inv_code"
+                onChange={this.handleOnChange}
             />
             <Box display="flex">
                 <ButtonGroup size="large" color="secondary" orientation="horizontal" variant="text" aria-label="outlined secondary button group " className={classes.submit}>
-                            <Button component={Link} to="/create" >Create room</Button>
-                            <Button component={Link} to="/join"> Join room</Button>
-                            
+                  <Button disabled ={!this.state.emptyness} component={Link} to="/create" >Create room</Button>
+                  <Button disabled ={this.state.emptyness} onClick={this.handleOnJoin}> Join room</Button>
                 </ButtonGroup>
                 
             </Box>
