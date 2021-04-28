@@ -4,9 +4,9 @@
 // -- include libarary--------
 require '../vendor/autoload.php'; //slim framwork
 require '../src/config/db.php'; //db
-require '../function/question.php'; //common util functions
-require '../function/room.php'; //user functions
-require '../function/user.php'; //bc functions
+require '../function/question.php';
+require '../function/room.php'; 
+require '../function/user.php'; 
 // ---------------------------------
 
 // --- HTTP request -------------------------------------
