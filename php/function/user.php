@@ -32,13 +32,14 @@ function get_player($room_id)
 //{"room_id":"3395"}
 {
 
-  $sql = "SELECT * FROM user WHERE room_id = '$room_id'";
+  $sql = "SELECT name FROM user WHERE room_id = '$room_id'";
   try {
     $db = new db();
     $db = $db->connect();
     $stmt = $db->query($sql);
     $fetched = $stmt->fetchAll(PDO::FETCH_OBJ);
     $db = null;
+	
     return msgPack("success", $fetched);
   } catch (PDOException $e) {
     return msgPack("failed", $e);

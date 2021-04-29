@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -10,7 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import FormLabel from '@material-ui/core/FormLabel';
 
-import setCookie from '../utils/cookies.js'
+import {setCookie} from '../utils/cookies.js'
 const useStyles = theme => ({
     paper: {
       marginTop: theme.spacing(6),
@@ -37,7 +37,8 @@ class Select extends Component {
     constructor(props) {
         super(props);
         this.state={
-            questions:[]
+            questions:[],
+            created:false
           }
         this.handleOnClick = this.handleOnClick.bind(this);
         this.handleOnDelete = this.handleOnDelete.bind(this);
@@ -61,11 +62,36 @@ class Select extends Component {
         // console.log(this.state.questions)
     }
     
-    handleOnSubmit=(e)=>{
+    handleOnSubmit=async(e)=>{
         e.preventDefault();
         let max_player = e.target[0].value
         let question_set = this.state.questions
-        console.log(question_set)
+        
+        // console.log(question_set)
+        const data = {
+            max_player,question_set
+        }
+        console.log(data)
+        const requestOptions={
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify(data)
+        }
+        const res = await fetch(localStorage.getItem("BackendURL")+"/room/create", requestOptions)
+        .then(res => res.json())
+        .then(data=> {
+          // console.log(data) ;
+        if (data["status"]=="success")
+          return data["msg"] 
+        })
+        .catch(error => console.log(error))
+        if (res!= null){
+            setCookie("role","host",2)
+            setCookie("inv_code",res[0],2)
+            setCookie("room_id",res[1],2)
+            setCookie("max_q",question_set.length,2)
+            this.setState({created:true})
+        }
     }
 
 
@@ -74,6 +100,13 @@ class Select extends Component {
         return (
             
         <Container component="main" >
+            {
+                (this.state.created==false)?
+                <div></div>
+                :
+                <Redirect to='/waiting'></Redirect>
+
+            }
             <div className={classes.paper}>
             <Box mb={8}>
                 <Typography component="h1" variant="h3">

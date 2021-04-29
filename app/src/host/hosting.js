@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { Link , Redirect } from 'react-router-dom';
 
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -8,8 +8,9 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import setCookie from '../utils/cookies.js'
+import {setCookie,getCookie} from '../utils/cookies.js'
 const useStyles = theme => ({
     paper: {
       marginTop: theme.spacing(6),
@@ -37,21 +38,66 @@ class Hosting extends Component {
         super(props);
         this.state={
             current_question:1,
-            last_question:5,
-            end:false
+            last_question:getCookie("max_q"),
+            end:false,
+            room_id:getCookie("room_id"),
+            loading:false
           }
       }
-    
-    handleNext = ()=>{
-        this.setState({current_question:this.state.current_question+1})
+
+    handleNext = async ()=>{
+        this.setState({loading:true})
+        const requestOptions={
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({"room_id":this.state.room_id})
+        }
+        await fetch(localStorage.getItem("BackendURL")+"/question/change", requestOptions)
+        .then(res => res.json())
+        .then(data=> {console.log(data)
+            this.checkStatus()
+        })
+        .catch(error => console.log(error))
+
+        this.setState({loading:false})
     }
 
-    handleEnd = ()=>{
-        this.setState({end:true})
+    handleEnd = async()=>{
+        const requestOptions={
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({"room_id":this.state.room_id})
+        }
+        await fetch(localStorage.getItem("BackendURL")+"/room/end", requestOptions)
+        .then(res => res.json())
+        .then(data=> {console.log(data)
+            if (data["status"]=="success")
+                this.setState({end:true})
+        })
+        .catch(error => console.log(error))
+        
     }
+    checkStatus = async()=>{
+        const requestOptions={
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({"room_id":this.state.room_id})
+        }
+        await fetch(localStorage.getItem("BackendURL")+"/room/status", requestOptions)
+        .then(res => res.json())
+        .then(data=> {
+        if (data["status"]=="success" ){
+            let current_q = parseInt(data["msg"][0]["current_q"])+1
+            if (this.state.current_question != current_q)
+                this.setState({current_question:current_q})
+        }
+        })
+        .catch(error => console.log(error))
+        }
 
     render(){
         const {classes} = this.props;
+        this.checkStatus()
         return (
         <Container maxWidth="sm" >
 
@@ -78,17 +124,23 @@ class Hosting extends Component {
                             
                             (this.state.current_question!=this.state.last_question)?
                                 
-                                    <Button
-                                        fullWidth
-                                        variant="contained"
-                                        color="primary"
-                                        className={classes.submit}
-                                        onClick={this.handleNext}
-                                    >
-                                        <Typography component="h1" variant="h5">
-                                            Next 🢂
-                                        </Typography>
-                                    </Button>
+                                (this.state.loading==false)?
+                                    <div>
+                                        <Button
+                                            fullWidth
+                                            variant="contained"
+                                            color="primary"
+                                            className={classes.submit}
+                                            onClick={this.handleNext}
+                                        >
+                                            <Typography component="h1" variant="h5">
+                                                Next 🢂
+                                            </Typography>
+                                        </Button>
+                                    </div>
+                                    :
+                                    <CircularProgress size={100} />
+
                                 
                                 :
                                 <div></div>
@@ -113,19 +165,21 @@ class Hosting extends Component {
                 :
                 <Grid>
                     <Box>
-                        <Typography component="h1" variant="h4">
-                        Thanks for playing
-                        </Typography>
-
+                        <div className={classes.paper}>
+                            <Typography component="h1" variant="h4">
+                            Thanks for playing
+                            </Typography>
+                        </div>
                     </Box>
                     <Box>
                         <Button
                         fullWidth
                         variant="contained"
                         color="primary"
-                        className={classes.submit}>
+                        className={classes.submit}
+                        component={Link} to="/" >
                         <Typography component="h1" variant="h5">
-                                    Back to menu
+                                Back to menu
                         </Typography>
                         </Button>
                     </Box>

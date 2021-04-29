@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -11,7 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import setCookie from './utils/cookies.js'
+import {setCookie,getCookie} from './utils/cookies.js'
 const useStyles = theme => ({
     paper: {
       marginTop: theme.spacing(6),
@@ -33,17 +33,94 @@ class Waiting extends Component {
     constructor(props) {
         super(props);
         this.state={
-            inv_code:"XAMPP",
-            identity:"host",
-            players:["gay","gay","gay","gay","gay","gay","gay","gay"]
+            room_id:getCookie("room_id"),
+            inv_code:getCookie("inv_code"),
+            identity:getCookie("role"),
+            players:[],
+            hostStarted:false,
+            playStarted:false
           }
       }
+    componentDidMount(){
+      this.interval = setInterval(() => this.checkWaiting(), 1000);
+      if (this.state.identity=="player"){
+        this.interval = setInterval(() => this.checkStatus(), 1000);
+      }
+    }
+    checkWaiting = async()=>{
+      const requestOptions={
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body:JSON.stringify({"room_id":this.state.room_id})
+      }
+      const encoded_players = await fetch(localStorage.getItem("BackendURL")+"/user/obtain", requestOptions)
+        .then(res => res.json())
+        .then(data=> {
+        if (data["status"]=="success")
+          return data["msg"] 
+        })
+        .catch(error => console.log(error))
+      
+      var players = []
+      for (const player in encoded_players){
+        players.push(encoded_players[player]["name"])
+      }
+      if (players!=this.state.players){
+        this.setState({players:players})
+      }
+    }
+    checkStatus = async()=>{
+      const requestOptions={
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body:JSON.stringify({"room_id":this.state.room_id})
+      }
+      await fetch(localStorage.getItem("BackendURL")+"/room/status", requestOptions)
+      .then(res => res.json())
+      .then(data=> {
+      if (data["status"]=="success" )
+        if (data["msg"][0]["status"]=="started"){
+          this.setState({playStarted:true})
+        } 
+      })
+      .catch(error => console.log(error))
+    }
+
+    handleStart =async ()=>{
+      let room_id = this.state.room_id
+      const requestOptions={
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body:JSON.stringify({"room_id":room_id})
+      }
+      await fetch(localStorage.getItem("BackendURL")+"/room/start", requestOptions)
+        .then(res => res.json())
+        .then(data=> {
+        if (data["status"]=="success")
+        this.setState({hostStarted:true})
+        })
+        .catch(error => console.log(error))
+    }
 
     render(){
         const {classes} = this.props;
         return (
             
         <Container component="main" maxWidth="sm" >
+            {
+              (this.state.hostStarted==false)?
+              <div></div>
+              :
+              <Redirect to='/hosting'></Redirect>
+
+            }
+            {
+              (this.state.playStarted==false)?
+              <div></div>
+              :
+              <Redirect to='/gaming'></Redirect>
+
+            }
             <div className={classes.paper}>
               <Box mb={4}>
                   <Typography component="h1" variant="h3">
@@ -107,11 +184,11 @@ class Waiting extends Component {
               {
                 (this.state.identity=="host")?
                 <Button
-                    type="submit"
                     fullWidth
                     variant="contained"
                     color="primary"
                     className={classes.submit}
+                    onClick={this.handleStart}
                 >
                     Start 
                 </Button>

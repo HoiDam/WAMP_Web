@@ -4,9 +4,9 @@
 // -- include libarary--------
 require '../vendor/autoload.php'; //slim framwork
 require '../src/config/db.php'; //db
-require '../function/question.php';
-require '../function/room.php'; 
-require '../function/user.php'; 
+require '../function/question.php'; //common util functions
+require '../function/room.php'; //user functions
+require '../function/user.php'; //bc functions
 // ---------------------------------
 
 // --- HTTP request -------------------------------------
@@ -46,24 +46,22 @@ $app->post('/question/get', function (Request $req, Response $res, $arg) {
   try {
     $input = $req->getParsedBody();
     $room_id = $input['room_id'];
-    $question_id = $input['question_id'];
+    $question_no = $input['question_no'];
   } catch (Exception $e) {
     return json_encode(msgPack("failed", "parameters missing"));
   }
-  return json_encode(get_question($room_id, $question_id));
+  return json_encode(get_question($room_id, $question_no));
 });
 
 $app->post('/question/change', function (Request $req, Response $res, $arg) {
 
   try {
     $input = $req->getParsedBody();
-    $user_id = $input['user_id'];
     $room_id = $input['room_id'];
-    $question_id = $input['question_id'];
   } catch (Exception $e) {
     return json_encode(msgPack("failed", "parameters missing"));
   }
-  return json_encode(change_question($user_id, $room_id, $question_id));
+  return json_encode(change_question($room_id));
 });
 
 
@@ -102,12 +100,12 @@ $app->post('/room/create', function (Request $req, Response $res, $arg) {
 
   try {
     $input = $req->getParsedBody();
-    $user_id = $input['username'];
     $max_player = $input['max_player'];
+    $question = $input['question_set'];
   } catch (Exception $e) {
     return json_encode(msgPack("failed", "parameters missing"));
   }
-  return json_encode(create_room($user_id, $max_player));
+  return json_encode(create_room($max_player, $question));
 });
 
 $app->post('/room/start', function (Request $req, Response $res, $arg) {
@@ -148,12 +146,12 @@ $app->post('/room/end', function (Request $req, Response $res, $arg) {
 
   try {
     $input = $req->getParsedBody();
-    $user_id = $input['user_id'];
+
     $room_id = $input['room_id'];
   } catch (Exception $e) {
     return json_encode(msgPack("failed", "parameters missing"));
   }
-  return json_encode(end_room($user_id, $room_id));
+  return json_encode(end_room( $room_id));
 });
 
 // ---------------------------------------------------------------

@@ -1,6 +1,6 @@
 <?php
 
-function insert_q($input)
+function insert_q($input,$room_id,$i)
 /*{
   "the_question": "question",
   "correct_ans": "this is c1",
@@ -10,21 +10,21 @@ function insert_q($input)
   "room_id": "3395"
 }*/
 {
-  $question_id = rand(1, 999);
+
   $created_at = date('Y-m-d H:i:s');
 
-  $q = $input['the_question'];
-  $real_ans = $input['correct_ans'];
-  $c2 = $input['choice_2'];
-  $c3 = $input['choice_3'];
-  $c4 = $input['choice_4'];
-  $room_id = $input['room_id'];
+  $q = $input['question'];
+  $real_ans = $input['correct_answer'];
+  $c2 = $input['choice2'];
+  $c3 = $input['choice3'];
+  $c4 = $input['choice4'];
 
+  $i = (int)$i;
   $the_array = array($real_ans, $c2, $c3, $c4);
   shuffle($the_array);
   $actual = array_search($real_ans, $the_array);
 
-  $sql = "INSERT INTO question(question_id,question,c1,c2,c3,c4,correct_ans,room_id,created) VALUES ($question_id, '$q', '$the_array[0]', '$the_array[1]', '$the_array[2]', '$the_array[3]', $actual, '$room_id', '$created_at')";
+  $sql = "INSERT INTO question(question,c1,c2,c3,c4,correct_ans,room_id,question_no,created) VALUES ('$q', '$the_array[0]', '$the_array[1]', '$the_array[2]', '$the_array[3]', $actual, '$room_id', $i,'$created_at')";
 
   try {
     $db = new db();
@@ -32,16 +32,16 @@ function insert_q($input)
     $stmt = $db->prepare($sql);
     $stmt->execute();
     $db = null;
-    return msgPack('success', $actual);
+
   } catch (PDOException $e) {
     return msgPack("failed", $e);
   }
 }
 
-function get_question($room_id, $question_id)
-//{"room_id": "3395", "question_id": "635"}
+function get_question($room_id, $question_no)
+
 {
-  $sql = "SELECT question,c1,c2,c3,c4,correct_ans,created FROM question where question_id = '$question_id' AND room_id = '$room_id' ORDER BY created";
+  $sql = "SELECT question,c1,c2,c3,c4,correct_ans,created FROM question where question_no = '$question_no' AND room_id = '$room_id' LIMIT 1";
   try {
     $db = new db();
     $db = $db->connect();
@@ -54,10 +54,10 @@ function get_question($room_id, $question_id)
   }
 }
 
-function change_question($room_id, $question_id)
+function change_question($room_id)
 {
-  $old_question_id = $question_id;
-  $sql = "UPDATE question SET question_id = '$question_id' WHERE question_id = $old_question_id AND room_id = $room_id";
+
+  $sql = "UPDATE room SET current_q = current_q +1 WHERE room_id = '$room_id'  ";
   try {
     $db = new db();
     $db = $db->connect();
@@ -68,5 +68,5 @@ function change_question($room_id, $question_id)
     return msgPack("failed", $e);
   }
 
-  return msgPack("success");
+  return msgPack("success","");
 }

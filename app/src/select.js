@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , Redirect } from 'react-router-dom';
 
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -9,7 +9,7 @@ import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
-import setCookie from './utils/cookies.js'
+import {setCookie,getCookie} from './utils/cookies.js'
 const useStyles = theme => ({
     paper: {
       marginTop: theme.spacing(6),
@@ -36,7 +36,9 @@ class Select extends Component {
         super(props);
         this.state={
             inv_code:"",
-            emptyness:true
+            emptyness:true,
+            user_id:getCookie("user_id"),
+            joined:false
           }
       }
 
@@ -47,15 +49,41 @@ class Select extends Component {
         this.setState({inv_code:e.target.value,emptyness:false})
       }
     }
-    handleOnJoin = (e) =>{
+    handleOnJoin = async(e) =>{
       let inv_code = this.state.inv_code
-      console.log(inv_code)
+      // console.log(inv_code)
+      const requestOptions={
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body:JSON.stringify({"inv_code":inv_code,"user_id":this.state.user_id})
+      }
+      console.log(this.state.user_id)
+      await fetch(localStorage.getItem("BackendURL")+"/room/join", requestOptions)
+      .then(res => res.json())
+      .then(data=> {console.log(data) ;
+      if (data["status"]=="success"){
+        setCookie("room_id",data["msg"],2)
+        setCookie("role","player",2)
+        setCookie("inv_code",inv_code)
+        this.setState({joined:true})
+      }
+      })
+      .catch(error => console.log(error))
+
     }
     render(){
         const {classes} = this.props;
+
+        
         return (
             
         <Container component="main" maxWidth="xs" >
+            {
+                (this.state.joined==false)?
+                <div></div>
+                :
+                <Redirect to='/waiting'></Redirect>
+            }
             <div className={classes.paper}>
             <Box mb={8}>
                 <Typography component="h1" variant="h3">

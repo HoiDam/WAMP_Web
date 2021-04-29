@@ -1,155 +1,114 @@
--- phpMyAdmin SQL Dump
--- version 4.6.4
--- https://www.phpmyadmin.net/
+-- MySQL dump 10.13  Distrib 8.0.23, for Win64 (x86_64)
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 28, 2021 at 08:20 AM
--- Server version: 5.7.14
--- PHP Version: 5.6.25
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: quiz
+-- ------------------------------------------------------
+-- Server version	5.7.31
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `quiz`
---
-
--- --------------------------------------------------------
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
 -- Table structure for table `question`
 --
 
+DROP TABLE IF EXISTS `question`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `question` (
-  `question_id` int(4) NOT NULL,
+  `question_id` int(32) NOT NULL AUTO_INCREMENT,
   `question` varchar(200) NOT NULL,
   `c1` varchar(200) NOT NULL,
   `c2` varchar(200) NOT NULL,
   `c3` varchar(200) NOT NULL,
   `c4` varchar(200) NOT NULL,
   `correct_ans` varchar(200) NOT NULL,
-  `room_id` varchar(4) NOT NULL,
-  `created` date DEFAULT NULL
+  `room_id` int(32) NOT NULL,
+  `question_no` int(32) NOT NULL,
+  `created` date DEFAULT NULL,
+  PRIMARY KEY (`question_id`),
+  UNIQUE KEY `question_id_UNIQUE` (`question_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `question`
 --
 
-INSERT INTO `question` (`question_id`, `question`, `c1`, `c2`, `c3`, `c4`, `correct_ans`, `room_id`, `created`) VALUES
-(999, 'question', 'this is c4', 'this is c1', 'this is c3', 'this is c2', '1', '3395', '2021-04-27'),
-(998, 'question', 'this is c3', 'this is c1', 'this is c4', 'this is c2', '1', '3395', '2021-04-27'),
-(98, 'question', 'this is c2', 'this is c3', 'this is c4', 'correct', 'correct', '3395', NULL),
-(996, 'question', 'this is c4', 'this is c3', 'this is c2', 'correct', 'correct', '3395', NULL),
-(309, 'question', 'correct', 'this is c4', 'this is c3', 'this is c2', 'correct', '3395', NULL),
-(320, 'question', 'this is c4', 'correct', 'this is c3', 'this is c2', 'correct', '3395', NULL),
-(35, 'question', 'this is c4', 'this is c2', 'correct', 'this is c3', 'correct', '3395', NULL),
-(15, 'question', 'this is c3', 'this is c4', 'this is c2', 'correct', 'correct', '3395', NULL),
-(712, 'question', 'correct', 'this is c2', 'this is c4', 'this is c3', 'correct', '3395', NULL),
-(519, 'question', 'this is c3', 'correct', 'this is c4', 'this is c2', 'correct', '3395', NULL),
-(949, 'question', 'correct', 'this is c4', 'this is c2', 'this is c3', 'correct', '3395', NULL),
-(133, 'question', 'this is c2', 'this is c4', 'this is c1', 'this is c3', 'this is c2', '3395', NULL),
-(587, 'question', 'this is c1', 'this is c2', 'this is c3', 'this is c4', 'this is c1', '3395', NULL),
-(852, 'question', 'this is c3', 'this is c4', 'this is c1', 'this is c2', 'this is c3', '3395', NULL),
-(188, 'question', 'this is c2', 'this is c1', 'this is c3', 'this is c4', 'this is c1', '3395', NULL),
-(596, 'question', 'this is c4', 'this is c2', 'this is c3', 'this is c1', 'this is c1', '3395', NULL),
-(635, 'question', 'this is c2', 'this is c1', 'this is c3', 'this is c4', 'this is c1', '3395', NULL),
-(997, 'question', 'this is c1', 'this is c3', 'this is c4', 'this is c2', '0', '3395', '2021-04-27'),
-(408, 'question', 'this is c1', 'this is c2', 'this is c4', 'this is c3', '0', '3395', '2021-04-27'),
-(329, 'question', 'this is c4', 'this is c2', 'this is c3', 'this is c1', '3', '3395', '2021-04-27'),
-(645, 'question', 'this is c3', 'this is c4', 'this is c2', 'this is c1', '3', '3395', '2021-04-27'),
-(415, 'question', 'this is c3', 'this is c1', 'this is c4', 'this is c2', '1', '3395', '2021-04-27'),
-(48, 'question', 'this is c3', 'this is c2', 'this is c1', 'this is c4', '2', '3395', '2021-04-27'),
-(1000, 'question', 'this is c2', 'this is c3', 'this is c1', 'this is c4', '2', '3395', '2021-04-27'),
-(1001, 'question', 'this is c4', 'this is c2', 'this is c1', 'this is c3', '2', '3395', '2021-04-27'),
-(1002, 'question', 'this is c3', 'this is c4', 'this is c1', 'this is c2', '2', '3395', '2021-04-27'),
-(1003, 'question', 'this is c3', 'this is c2', 'this is c4', 'this is c1', '3', '3395', '2021-04-27'),
-(1004, 'question', 'this is c1', 'this is c2', 'this is c4', 'this is c3', '0', '3395', '2021-04-27'),
-(1005, 'question', 'this is c1', 'this is c2', 'this is c3', 'this is c4', '0', '3395', '2021-04-27'),
-(1006, 'question', 'this is c3', 'this is c4', 'this is c2', 'this is c1', '3', '3395', '2021-04-27');
-
--- --------------------------------------------------------
+LOCK TABLES `question` WRITE;
+/*!40000 ALTER TABLE `question` DISABLE KEYS */;
+/*!40000 ALTER TABLE `question` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `room`
 --
 
+DROP TABLE IF EXISTS `room`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `room` (
-  `room_id` varchar(4) NOT NULL,
+  `room_id` int(32) NOT NULL AUTO_INCREMENT,
   `inv_code` varchar(13) NOT NULL,
-  `max_player` int(2) NOT NULL,
+  `max_player` int(32) NOT NULL,
   `status` varchar(10) NOT NULL,
   `current_q` int(2) NOT NULL,
-  `now_no` int(20) NOT NULL
+  `now_no` int(20) NOT NULL,
+  `question_total` int(32) NOT NULL,
+  PRIMARY KEY (`room_id`),
+  UNIQUE KEY `room_id_UNIQUE` (`room_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `room`
 --
 
-INSERT INTO `room` (`room_id`, `inv_code`, `max_player`, `status`, `current_q`, `now_no`) VALUES
-('9714', '60867a444a388', 20, 'created', 0, 2),
-('3395', '6086d23d8cdc0', 20, 'finished', 0, 3);
-
--- --------------------------------------------------------
+LOCK TABLES `room` WRITE;
+/*!40000 ALTER TABLE `room` DISABLE KEYS */;
+/*!40000 ALTER TABLE `room` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
 --
 
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
-  `user_id` varchar(4) NOT NULL,
+  `user_id` int(32) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
   `created_at` date NOT NULL,
-  `room_id` varchar(4) NOT NULL
+  `room_id` int(32) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `user_id_UNIQUE` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `name`, `created_at`, `room_id`) VALUES
-('2529', 'abc', '2021-04-26', '3395'),
-('4841', 'abc', '2021-04-26', '3395'),
-('4222', 'abc', '2021-04-26', '3395');
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `question`
---
-ALTER TABLE `question`
-  ADD PRIMARY KEY (`question_id`);
-
---
--- Indexes for table `room`
---
-ALTER TABLE `room`
-  ADD PRIMARY KEY (`room_id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`user_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `question`
---
-ALTER TABLE `question`
-  MODIFY `question_id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1007;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2021-04-29 16:00:31

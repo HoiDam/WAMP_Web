@@ -13,7 +13,9 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import setCookie from '../utils/cookies.js'
+import DoughnutChart from './scoreboard.js'
+
+import setCookie, { getCookie } from '../utils/cookies.js'
 const useStyles = theme => ({
     paper: {
       marginTop: theme.spacing(6),
@@ -56,26 +58,99 @@ class Gaming extends Component {
     constructor(props) {
         super(props);
         this.state={
-            question:"Are Ya Gae?",
-            correct_answer:1,
-            choices:["1","2","3","4"],
-            end:false,
+            question:"",
+            correct_answer:-1,
+            choices:[],
+            end:false, //
             correctness:false,
             modalOpen:false,
-            correct_count:0,
+            correct_count:0,  
             wrong_count:0,
             answered:false,
-            current_question:1,
-            total_question:5
+            current_question:0,
+            total_question:1,
+            room_id:getCookie("room_id")
         }
     }
+
+    componentDidMount(){
+        if (this.state.end==false){
+        this.interval = setInterval(() => 
+        this.checkStatus(), 1000);
+        }
+    }
+
+    getQuestion = async(question_no)=>{
+        const requestOptions={
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({"room_id":this.state.room_id,"question_no":question_no})
+        }
+        await fetch(localStorage.getItem("BackendURL")+"/question/get", requestOptions)
+        .then(res => res.json())
+        .then(data=> {
+        if (data["status"]=="success" ){
+            let received = data["msg"][0]
+            console.log(received)
+            let r_choices = []
+            r_choices.push(received["c1"],received["c2"],received["c3"],received["c4"])
+
+            this.setState({
+                correct_answer:parseInt(received["correct_ans"])+1,
+                choices:r_choices,
+                question:received["question"]
+            })
+            console.log(this.state.choices)
+        }
+        })
+        .catch(error => console.log(error))
+    }
+
+    checkStatus = async()=>{
+        const requestOptions={
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body:JSON.stringify({"room_id":this.state.room_id})
+        }
+        await fetch(localStorage.getItem("BackendURL")+"/room/status", requestOptions)
+        .then(res => res.json())
+        .then(data=> {
+        if (data["status"]=="success" ){
+            // console.log(data["msg"])
+            let current_q = parseInt(data["msg"][0]["current_q"])+1
+            if (data["msg"][0]["status"]=="finished"){
+                clearInterval(this.interval)
+                this.setState({end:true})
+                
+            }
+            else if (this.state.current_question != current_q){
+                this.setState({
+                    current_question:current_q,
+                    total_question:data["msg"][0]["question_total"],
+                    answered:false
+                })
+                this.getQuestion(current_q-1)
+            }
+        }
+        })
+        .catch(error => console.log(error))
+    }
+
     handleChoose = (e,index)=>{
         let chosen = index+1
         console.log(chosen)
         if (chosen==this.state.correct_answer){
-            this.setState({modalOpen:true,correctness:true,answered:true,correct_count:this.state.correct_count+1});
+            this.setState({
+                modalOpen:true,
+                correctness:true,
+                answered:true,
+                correct_count:this.state.correct_count+1});
         }else {
-            this.setState({modalOpen:true,correctness:false,answered:true,wrong_count:this.state.wrong_count+1});
+            this.setState({
+                modalOpen:true,
+                correctness:false,
+                answered:true,
+                wrong_count:this.state.wrong_count+1});
         }
     }
     handleClose = () => {
@@ -98,7 +173,7 @@ class Gaming extends Component {
                         (this.state.end==false)?
                     <div>
                         {
-                            (this.state.correct_answer==0)?
+                            (this.state.correct_answer==-1)?
                                 <div>
                                     <Typography component="h1" variant="h5" align="center">
                                     Please Wait ... <CircularProgress size={20} />
@@ -114,6 +189,12 @@ class Gaming extends Component {
                                 </Box>
                                 <Box mb={4} >
                                     <LinearProgress className={classes.bar} variant="determinate" value={this.state.current_question/this.state.total_question*100}/>
+                                </Box>
+
+                                <Box mb={4} className={classes.paper}>
+                                    <Typography  variant="h4">
+                                    Question : {this.state.question}
+                                    </Typography>
                                 </Box>
                                 <Grid container direction="row" spacing="3">
                                     {
@@ -141,8 +222,31 @@ class Gaming extends Component {
                         }
                     </div>
 
-                    :<div>
-                        Scoreboard
+                    :
+                    <div>
+                        <Box mb={4} className={classes.paper}>
+                            <Typography component="h1" variant="h3">
+                            Scoreboard 💯
+                            </Typography>
+                        </Box>
+                        <DoughnutChart 
+                            correct_count={this.state.correct_count}
+                            wrong_count={this.state.wrong_count}
+                            >
+
+                        </DoughnutChart>
+                        <Box className={classes.paper}>
+                            <Button
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            component={Link} to="/" >
+                            <Typography component="h1" variant="h5">
+                                Back to menu
+                            </Typography>
+                            </Button>
+                        </Box>
                     </div>
                 }
 

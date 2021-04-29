@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -49,7 +48,7 @@ class Login extends Component {
         headers: {'Content-Type': 'application/json'},
         body:JSON.stringify({"username":username})
       };
-      console.log(localStorage.getItem("BackendURL")+"/user/create")
+      // console.log(localStorage.getItem("BackendURL")+"/user/create")
       const user_id = await fetch(localStorage.getItem("BackendURL")+"/user/create", requestOptions)
         .then(res => res.json())
         .then(data=> {console.log(data) ; 
